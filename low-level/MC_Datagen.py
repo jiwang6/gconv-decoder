@@ -109,12 +109,12 @@ if __name__ == "__main__":
 
     seed(randseed)
     print(randseed)
-    L = 5
+    L = 28
     px = 0.100 # typical x error rate is at MAX 1.4e-1
     # initialize np array
     arry = []
     for i in range(num_obs):
-        x_stab, z_stab, x_qubits, z_qubits = make_grids(L)
+        x_stab, z_stab, x_qubits, z_qubits = make_grids(L) n  
         x_stab, z_stab, x_qubits, z_qubits = generate_error(x_stab, z_stab, x_qubits, z_qubits, px)
         """ 
 
