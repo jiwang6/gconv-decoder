@@ -52,7 +52,7 @@ def visualize_observation(observation):
     n_squared = int(six_n_squared / 6)
     n = int(n_squared ** 0.5)
 
-    print(n)
+    print(f"distance: {n}")
 
     # first n^2 entries are x_stab
     x_stab = observation[:n_squared]
