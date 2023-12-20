@@ -73,7 +73,7 @@ def visualize_observation(observation):
     pp_code(x_stab, z_stab, x_qubits, z_qubits)
 
 
-def pp_code_X(x_stab, x_qubits):
+def pp_code_Z(x_stab, x_qubits):
     L = x_qubits.shape[0]/2
     # initialize empty plot
     fig, ax = plt.subplots(figsize=(2*L,2*L))
@@ -103,5 +103,38 @@ def pp_code_X(x_stab, x_qubits):
             #print(f"down: {down}, right: {right}, bit: {bit}")
             if bit == 1:
                 ax.plot((right + 0)% L, L-((down+0) %L ), marker='o', color='b', markersize=10)
+
+    plt.show()
+
+def pp_code_Z(z_stab, z_qubits):
+    L = z_qubits.shape[0]/2
+    # initialize empty plot
+    fig, ax = plt.subplots(figsize=(2*L,2*L))
+    # set bounds for image
+    ax.set_xlim(-1, L+1)
+    ax.set_ylim(-1, L+1)
+
+    # draw gridlines
+    ax.grid(which='major', axis='both', linestyle='-', color='k', linewidth=1)
+    # remove gridlines to the left of x = 0
+    for down, row in enumerate(z_qubits): # AWFUL AWFUL COORDINATE SYSTEM
+        for right, bit in enumerate(row):
+            #print(f"down: {down}, right: {right}, bit: {bit}")
+            if down%2 == 0:
+                ax.plot(right+0.5, L-(down*0.5), marker='o', color='k', markersize=5)
+                if bit == 1:
+                    ax.plot(right+0.5, L-(down*0.5), marker='o', color='r', markersize=5)
+
+            else:
+                ax.plot(right, L-(down*0.5), marker='o', color='k', markersize=5)
+                if bit == 1:
+                    ax.plot(right, L-(down*0.5), marker='o', color='r', markersize=5)
+
+
+    for down, row in enumerate(z_stab):
+        for right, bit in enumerate(row):
+            #print(f"down: {down}, right: {right}, bit: {bit}")
+            if bit == 1:
+                ax.plot(right+0.5, L-(down+0.5), marker='o', color='b', markersize=10)
 
     plt.show()
