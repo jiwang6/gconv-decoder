@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def pp_code(x_stab, z_stab, x_qubits, z_qubits):
+def pp_code(z_stab, x_stab, x_qubits, z_qubits):
     L = x_qubits.shape[0]/2
     # initialize empty plot
     fig, ax = plt.subplots(figsize=(2*L,2*L))
