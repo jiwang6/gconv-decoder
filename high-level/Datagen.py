@@ -4,6 +4,7 @@ from random import random, seed, randint
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.sparse import hstack, kron, eye, csc_matrix, block_diag
+import time
 
 
 def repetition_code(n):
@@ -146,12 +147,13 @@ if __name__ == "__main__":
     # generate random integer:
     randseed = 69
 
-    num_obs =  1
+    num_obs =  70000
 
     seed(randseed)
     print(f"seed: {randseed}")
-    L = 5
-    percent_error = 0.050 # typical x error rate is at MAX 1.4e-1
+
+    L = 7
+    percent_error = 0.10 # typical x error rate is at MAX 1.4e-1
     # initialize np array
     arry = []
 
@@ -159,6 +161,8 @@ if __name__ == "__main__":
     Hz = toric_code_z_stabilisers(L)
     logX = toric_code_x_logicals(L)
     logZ = toric_code_z_logicals(L)
+
+    start_time = time.time()
 
     for i in range(num_obs):
         # init error, syndrome, and logicals
@@ -179,7 +183,7 @@ if __name__ == "__main__":
         x_logical = np.array(x_logical)
         z_logical = np.array(z_logical)
 
-        print(x_syndrome.shape)
+        #print(x_syndrome.shape)
 
         observation = np.concatenate((x_syndrome, z_syndrome, x_noise, z_noise, x_logical, z_logical))
 
@@ -192,3 +196,5 @@ if __name__ == "__main__":
         
     px_hundo = int(percent_error * 100)
     np.save(f'high-level/test-datasets/HL_data_{L}_{px_hundo}_{num_obs}.npy', arry)
+
+    print(f"Saved dataset with {num_obs} observations, L={L}, and {px_hundo}% error rate in {time.time() - start_time} seconds")
