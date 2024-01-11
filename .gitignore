@@ -163,4 +163,5 @@ cython_debug/
 
 */datasets/*
 */test_datasets/*
+*/test-datasets/*
 */models/*
