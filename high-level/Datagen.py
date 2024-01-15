@@ -166,8 +166,22 @@ if __name__ == "__main__":
 
     for i in range(num_obs):
         # init error, syndrome, and logicals
-        x_noise = (np.random.random(Hx.shape[1]) < percent_error).astype(np.uint8)
-        z_noise = (np.random.random(Hz.shape[1]) < percent_error).astype(np.uint8)
+        noise = (np.random.random(Hx.shape[1]) < percent_error).astype(np.uint8)
+        x_noise = np.zeros(Hx.shape[1], dtype=np.uint8)
+        z_noise = np.zeros(Hz.shape[1], dtype=np.uint8)
+
+        for index in range(len(noise)):
+            if noise[index] == 1:
+                # random float between 0 and 1
+                roll = random()
+                if roll < 0.33:
+                    x_noise[index] = 1
+                elif roll < 0.66:
+                    z_noise[index] = 1
+                else:
+                    x_noise[index] = 1
+                    z_noise[index] = 1
+
         x_syndrome = (Hx @ x_noise) % 2
         z_syndrome = (Hz @ z_noise) % 2
         x_logical = (logX @ x_noise) % 2
