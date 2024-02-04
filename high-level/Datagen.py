@@ -152,63 +152,68 @@ if __name__ == "__main__":
     seed(randseed)
     print(f"seed: {randseed}")
 
-    L = 17
-    percent_error = 0.10 # typical x error rate is at MAX 1.4e-1
+    L_arry = [5, 7, 9]
+    percent_error_arry = [0.155, 0.166, 0.178, 0.180]
+
+
     # initialize np array
-    arry = []
 
-    Hx = toric_code_x_stabilisers(L)
-    Hz = toric_code_z_stabilisers(L)
-    logX = toric_code_x_logicals(L)
-    logZ = toric_code_z_logicals(L)
+    for L in L_arry:
+        for percent_error in percent_error_arry:
 
-    start_time = time.time()
+            Hx = toric_code_x_stabilisers(L)
+            Hz = toric_code_z_stabilisers(L)
+            logX = toric_code_x_logicals(L)
+            logZ = toric_code_z_logicals(L)
 
-    for i in range(num_obs):
-        # init error, syndrome, and logicals
-        noise = (np.random.random(Hx.shape[1]) < percent_error).astype(np.uint8)
-        x_noise = np.zeros(Hx.shape[1], dtype=np.uint8)
-        z_noise = np.zeros(Hz.shape[1], dtype=np.uint8)
+            start_time = time.time()
+            arry = []
 
-        for index in range(len(noise)):
-            if noise[index] == 1:
-                # random float between 0 and 1
-                roll = random()
-                if roll < 0.33:
-                    x_noise[index] = 1
-                elif roll < 0.66:
-                    z_noise[index] = 1
-                else:
-                    x_noise[index] = 1
-                    z_noise[index] = 1
+            for i in range(num_obs):
+                # init error, syndrome, and logicals
+                noise = (np.random.random(Hx.shape[1]) < percent_error).astype(np.uint8)
+                x_noise = np.zeros(Hx.shape[1], dtype=np.uint8)
+                z_noise = np.zeros(Hz.shape[1], dtype=np.uint8)
 
-        x_syndrome = (Hx @ x_noise) % 2
-        z_syndrome = (Hz @ z_noise) % 2
-        x_logical = (logX @ x_noise) % 2
-        z_logical = (logZ @ z_noise) % 2
+                for index in range(len(noise)):
+                    if noise[index] == 1:
+                        # random float between 0 and 1
+                        roll = random()
+                        if roll < 0.33:
+                            x_noise[index] = 1
+                        elif roll < 0.66:
+                            z_noise[index] = 1
+                        else:
+                            x_noise[index] = 1
+                            z_noise[index] = 1
 
-        # arrange x syndrome and physical qubits
-        x_syndrome = arrange_x_syndrome(x_syndrome)
-        x_noise = arrange_physical_qubits(x_noise)
-        z_noise = arrange_physical_qubits(z_noise)
+                x_syndrome = (Hx @ x_noise) % 2
+                z_syndrome = (Hz @ z_noise) % 2
+                x_logical = (logX @ x_noise) % 2
+                z_logical = (logZ @ z_noise) % 2
 
-        x_syndrome = np.array(x_syndrome)
-        z_syndrome = np.array(z_syndrome)
-        x_logical = np.array(x_logical)
-        z_logical = np.array(z_logical)
+                # arrange x syndrome and physical qubits
+                x_syndrome = arrange_x_syndrome(x_syndrome)
+                x_noise = arrange_physical_qubits(x_noise)
+                z_noise = arrange_physical_qubits(z_noise)
 
-        #print(x_syndrome.shape)
+                x_syndrome = np.array(x_syndrome)
+                z_syndrome = np.array(z_syndrome)
+                x_logical = np.array(x_logical)
+                z_logical = np.array(z_logical)
 
-        observation = np.concatenate((x_syndrome, z_syndrome, x_noise, z_noise, x_logical, z_logical))
+                #print(x_syndrome.shape)
 
-        #visualize_observation(observation)
+                observation = np.concatenate((x_syndrome, z_syndrome, x_noise, z_noise, x_logical, z_logical))
 
-        arry.append(observation)
+                #visualize_observation(observation)
 
-        if i % 10000 == 0:
-            print(f'Progress: {i}/{num_obs}')
-        
-    px_hundo = int(percent_error * 100)
-    np.save(f'high-level/test-datasets/HL_data_{L}_{px_hundo}_{num_obs}.npy', arry)
+                arry.append(observation)
 
-    print(f"Saved dataset with {num_obs} observations, L={L}, and {px_hundo}% error rate in {time.time() - start_time} seconds")
+                if i % 10000 == 0:
+                    print(f'Progress: {i}/{num_obs}')
+                
+            px_hundo = int(percent_error * 1000)
+            np.save(f'high-level/test-datasets/HL_data_{L}_{px_hundo}_{num_obs}.npy', arry)
+
+            print(f"Saved dataset with {num_obs} observations, L={L}, and {px_hundo}% error rate in {time.time() - start_time} seconds")
