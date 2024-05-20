@@ -166,6 +166,10 @@ cython_debug/
 */test-datasets/*
 */models/*
 
-# all images
+# all media
 *.png
-.npy
+*.npy
+*.txt
+
+# anything in models folder
+*/models/*

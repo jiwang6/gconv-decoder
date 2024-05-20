@@ -153,13 +153,14 @@ if __name__ == "__main__":
     print(f"seed: {randseed}")
 
     L_arry = [5, 7, 9]
-    percent_error_arry = [0.155, 0.166, 0.178, 0.180]
-
+    percent_error_arry = [0.155, 0.0155, 0.00155, 0.0001555]
+    divide_amts = [1, 10, 100, 1000]
 
     # initialize np array
 
     for L in L_arry:
-        for percent_error in percent_error_arry:
+        for divide_amt in divide_amts:
+            percent_error = 0.155 / divide_amt
 
             Hx = toric_code_x_stabilisers(L)
             Hz = toric_code_z_stabilisers(L)
@@ -213,7 +214,7 @@ if __name__ == "__main__":
                 if i % 10000 == 0:
                     print(f'Progress: {i}/{num_obs}')
                 
-            px_hundo = int(percent_error * 1000)
-            np.save(f'high-level/test-datasets/HL_data_{L}_{px_hundo}_{num_obs}.npy', arry)
+            px_hundo = int(percent_error * 100000)
+            np.save(f'high-level/test-datasets/HL_data_{L}_{divide_amt}_{num_obs}.npy', arry)
 
             print(f"Saved dataset with {num_obs} observations, L={L}, and {px_hundo}% error rate in {time.time() - start_time} seconds")
